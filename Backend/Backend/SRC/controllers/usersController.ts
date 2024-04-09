@@ -1,7 +1,7 @@
 
 import express, { Request, Response } from 'express';
 import User from '../models/User.js';
-import bcrypt from 'bcrypt';
+//import bcrypt from 'bcrypt';
 import requireAuth from '../middlewares/authMiddleware.js';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
@@ -54,12 +54,12 @@ const userController = {
             }
             const duplicate = await User.findOne({ email: email }).exec();
             if (duplicate) return res.status(409).json({ "duplicateError": "Email already used!" });
-            const salt = await bcrypt.genSalt();
-            const hashedPassword = await bcrypt.hash(password, salt);
+            //const salt = await bcrypt.genSalt();
+            // const hashedPassword = await bcrypt.hash(password, salt);
             const user = new User({
                 names,
                 email,
-                password: hashedPassword,
+                password: password,
                 isAdmin
             });
             await user.save();
