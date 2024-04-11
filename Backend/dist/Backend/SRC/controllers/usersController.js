@@ -140,6 +140,7 @@ const userController = {
                     //const loggedUser = decodedToken.payload;
                     //res.cookie('token', token, { httpOnly: true });
                     // res.json({ token });
+                    res.cookie('token', token, { httpOnly: true, expires: new Date(Date.now() + 3600000) }); // expires in 1 hour
                     res.setHeader('Authorization', `Bearer ${token}`);
                     return res.status(200).json({ "User login succes with token ": token });
                 }
