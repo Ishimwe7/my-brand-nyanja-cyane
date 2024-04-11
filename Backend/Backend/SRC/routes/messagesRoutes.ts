@@ -4,6 +4,7 @@ import express from "express";
 const router = express.Router();
 import messageController from '../controllers/messagesController.js';
 import authMiddleware from '../middlewares/authMiddleware.js';
+import adminMiddleware from '../middlewares/adminMiddleware.js';
 /**
  * @swagger
  * tags:
@@ -54,7 +55,7 @@ router.post('/newMessage/', messageController.sendMessage);
  *       '500':
  *         description: Internal server error
  */
-router.get('/allMessages/', messageController.getAllMessages);
+router.get('/allMessages/', adminMiddleware, messageController.getAllMessages);
 
 /**
  * @swagger
@@ -81,7 +82,7 @@ router.get('/allMessages/', messageController.getAllMessages);
  *       '500':
  *         description: Internal server error
  */
-router.get('/getMessage/:messageId/', messageController.getMessageById);
+router.get('/getMessage/:messageId/', adminMiddleware, messageController.getMessageById);
 
 /**
  * @swagger
@@ -104,6 +105,6 @@ router.get('/getMessage/:messageId/', messageController.getMessageById);
  *       '500':
  *         description: Internal server error
  */
-router.delete('/deleteMessage/:messageId/', messageController.deleteMessage);
+router.delete('/deleteMessage/:messageId/', adminMiddleware, messageController.deleteMessage);
 
 export default router;

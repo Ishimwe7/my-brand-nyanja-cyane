@@ -18,7 +18,7 @@ async function authenticateUser() {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
 
-    await fetch('http://localhost:8000/users/login', {
+    await fetch('https://my-brand-nyanja-cyane.onrender.com/users/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

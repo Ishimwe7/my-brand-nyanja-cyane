@@ -51,7 +51,7 @@ const buildArticle = (myArticle, id) => {
     let liked = false;
     likeBtn.addEventListener('click', async () => {
         if (!liked) {
-            await fetch(`http://localhost:8000/blogs/addLike/${myArticle._id}/like`, {
+            await fetch(`https://my-brand-nyanja-cyane.onrender.com/blogs/addLike/${myArticle._id}/like`, {
                 method: 'POST',
             }).then(response => {
                 if (response.ok) {
@@ -69,7 +69,7 @@ const buildArticle = (myArticle, id) => {
                 });
         }
         else {
-            await fetch(`http://localhost:8000/blogs/unLike/${myArticle._id}/like`, {
+            await fetch(`https://my-brand-nyanja-cyane.onrender.com/blogs/unLike/${myArticle._id}/like`, {
                 method: 'POST',
             }).then(response => {
                 if (response.ok) {
@@ -121,7 +121,7 @@ const buildArticle = (myArticle, id) => {
         addedDate: new Date().toISOString() // Assuming you want to include the current date/time
     };
     commentForm.addEventListener('submit', async () => {
-        await fetch(`http://localhost:8000/blogs/addComment/${myArticle._id}/comments`, {
+        await fetch(`https://my-brand-nyanja-cyane.onrender.com/blogs/addComment/${myArticle._id}/comments`, {
             method: 'POST',
             body: JSON.stringify(commentData)
         }).then(response => {
@@ -205,7 +205,7 @@ const loadListObject = async () => {
     //     myArticlesList.addArticle(newArticle);
     // });
 
-    await fetch('http://localhost:8000/blogs/allBlogs', {
+    await fetch('https://my-brand-nyanja-cyane.onrender.com/blogs/allBlogs', {
         method: 'GET',
     }).then(response => {
 
