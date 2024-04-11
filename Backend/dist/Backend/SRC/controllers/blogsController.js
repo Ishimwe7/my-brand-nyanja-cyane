@@ -87,7 +87,9 @@ const blogController = {
     async addCommentToBlog(req, res) {
         try {
             const blogId = req.params.blogId;
-            const { author, content } = req.body;
+            // const { author, content } = req.body;
+            const content = req.body.content;
+            const author = req.user.username;
             const blog = await Blog.findById(blogId);
             if (!blog) {
                 return res.status(404).json({ error: 'Blog not found' });

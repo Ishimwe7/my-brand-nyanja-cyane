@@ -42,7 +42,7 @@ const buildArticle = (myArticle) => {
     deleteBtn.id = "deleteBtn" + myArticle._id;
 
     deleteBtn.addEventListener('click', async () => {
-        await fetch(`http://localhost:8000/blogs/deleteBlog/${myArticle._id}`, {
+        await fetch(`https://my-brand-nyanja-cyane.onrender.com/blogs/deleteBlog/${myArticle._id}`, {
             method: 'DELETE',
         }).then(response => {
 
@@ -88,7 +88,7 @@ const loadListObject = async () => {
     //     const newArticle = createNewArticle(article._id, article._title, article._image, article._content);
     //     myArticlesList.addArticle(newArticle);
     // });
-    await fetch('http://localhost:8000/blogs/allBlogs', {
+    await fetch('https://my-brand-nyanja-cyane.onrender.com/blogs/allBlogs', {
         method: 'GET',
     }).then(response => {
 

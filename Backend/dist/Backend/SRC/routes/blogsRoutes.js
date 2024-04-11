@@ -1,3 +1,6 @@
+// //const express = require('express');
+import authMiddleware from '../middlewares/authMiddleware.js';
+import adminMiddleware from '../middlewares/adminMiddleware.js';
 import express from "express";
 import blogController from '../controllers/blogsController.js';
 const router = express.Router();
@@ -54,7 +57,7 @@ const router = express.Router();
  *       '500':
  *         description: Internal server error
  */
-router.post('/newBlog', blogController.addBlog);
+router.post('/newBlog', adminMiddleware, blogController.addBlog);
 /**
  * @swagger
  * /blogs/allBlogs:
@@ -99,7 +102,7 @@ router.get('/allBlogs', blogController.getAllBlogs);
  *       '500':
  *         description: Internal server error
  */
-router.get('/getBlog/:blogId', blogController.getBlogById);
+router.get('/getBlog/:blogId', adminMiddleware, blogController.getBlogById);
 /**
  * @swagger
  * /blogs/editBlog/{blogId}:
@@ -131,7 +134,7 @@ router.get('/getBlog/:blogId', blogController.getBlogById);
  *       '500':
  *         description: Internal server error
  */
-router.put('/editBlog/:blogId', blogController.updateBlog);
+router.put('/editBlog/:blogId', adminMiddleware, blogController.updateBlog);
 /**
  * @swagger
  * /blogs/deleteBlog/{blogId}:
@@ -153,7 +156,7 @@ router.put('/editBlog/:blogId', blogController.updateBlog);
  *       '500':
  *         description: Internal server error
  */
-router.delete('/deleteBlog/:blogId', blogController.deleteBlog);
+router.delete('/deleteBlog/:blogId', adminMiddleware, blogController.deleteBlog);
 /**
  * @swagger
  * /blogs/addComment/{blogId}/comments:
@@ -174,10 +177,10 @@ router.delete('/deleteBlog/:blogId', blogController.deleteBlog);
  *           schema:
  *             type: object
  *             properties:
- *               comment:
+ *               content:
  *                 type: string
  *             required:
- *               - comment
+ *               - content
  *     responses:
  *       '201':
  *         description: Successfully added the comment
@@ -186,7 +189,7 @@ router.delete('/deleteBlog/:blogId', blogController.deleteBlog);
  *       '500':
  *         description: Internal server error
  */
-router.post('/addComment/:blogId/comments', blogController.addCommentToBlog);
+router.post('/addComment/:blogId/comments', authMiddleware, blogController.addCommentToBlog);
 /**
  * @swagger
  * /blogs/addLike/{blogId}/like:
@@ -208,7 +211,7 @@ router.post('/addComment/:blogId/comments', blogController.addCommentToBlog);
  *       '500':
  *         description: Internal server error
  */
-router.post('/addLike/:blogId/like', blogController.likeBlog);
+router.post('/addLike/:blogId/like', authMiddleware, blogController.likeBlog);
 /**
  * @swagger
  * /blogs/unLike/{blogId}/like/:
@@ -230,5 +233,5 @@ router.post('/addLike/:blogId/like', blogController.likeBlog);
  *       '500':
  *         description: Internal server error
  */
-router.delete('/unLike/:blogId/like/', blogController.unlikeBlog);
+router.delete('/unLike/:blogId/like/', authMiddleware, blogController.unlikeBlog);
 export default router;

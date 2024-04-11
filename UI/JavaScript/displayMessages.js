@@ -22,7 +22,7 @@ const loadListObject = async () => {
     // if (typeof storedMessages !== "string") return;
     // const parsedMessages = JSON.parse(storedMessages);
 
-    await fetch('http://localhost:8000/messages/allMessages/', {
+    await fetch('https://my-brand-nyanja-cyane.onrender.com/messages/allMessages/', {
         method: 'GET',
         // headers: {
         //     'Content-Type': 'application/json'

@@ -115,7 +115,7 @@ const processSubmission = () => {
         //myArticlesList.addArticle(article);
         // updatePersistentData(myArticlesList.getArticlesList());
         console.log(imageUrl);
-        await fetch('http://localhost:8000/blogs/newBlog', {
+        await fetch('https://my-brand-nyanja-cyane.onrender.com/blogs/newBlog', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

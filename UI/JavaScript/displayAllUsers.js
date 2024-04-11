@@ -24,7 +24,7 @@ const loadListObject = async () => {
     //     const newUser = registerUser(user._id, user._names, user._email);
     //     allUsers.addUser(newUser);
     // });
-    await fetch('http://localhost:8000/users/allUsers/', {
+    await fetch('https://my-brand-nyanja-cyane.onrender.com/users/allUsers/', {
         method: 'GET',
         // headers: {
         //     'Content-Type': 'application/json'
