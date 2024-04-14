@@ -193,5 +193,6 @@ router.post('/logout', userController.logout);
  *         description: Internal server error
  */
 router.delete('/deleteUser', adminMiddleware, userController.deleteUser);
+router.get('/decodeToken', userController.decodeToken);
 
 export default router;
