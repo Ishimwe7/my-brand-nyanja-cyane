@@ -20,6 +20,7 @@ const blogController = {
                 imageUrl,
                 comments: [],
                 likes: 0,
+                usersLiked: [],
                 creationDate: Date.now()
             });
             await blog.save();
@@ -145,12 +146,12 @@ const blogController = {
     async likeBlog(req: Request, res: Response) {
         try {
             const blogId = req.params.blogId;
-
+            const user = req.user._id;
             const blog = await Blog.findById(blogId);
             if (!blog) {
                 return res.status(404).json({ error: 'Blog not found' });
             }
-
+            blog.usersLiked.push(user);
             blog.likes++;
             const updatedBlog = await blog.save();
             res.json(updatedBlog);
@@ -163,13 +164,21 @@ const blogController = {
     async unlikeBlog(req: Request, res: Response) {
         try {
             const blogId = req.params.blogId;
-
+            const userId = req.user._id;
             const blog = await Blog.findById(blogId);
             if (!blog) {
                 return res.status(404).json({ error: 'Blog not found' });
             }
 
             if (blog.likes > 0) {
+                if (blog.usersLiked.includes(userId)) {
+                    return res.status(400).json({ error: 'User has already liked this blog' });
+                }
+                if (!blog.usersLiked.includes(userId)) {
+                    return res.status(400).json({ error: 'User has not liked this blog' });
+                }
+                const userIndex = blog.usersLiked.indexOf(userId);
+                blog.usersLiked.splice(userIndex, 1);
                 blog.likes--;
             }
             const updatedBlog = await blog.save();

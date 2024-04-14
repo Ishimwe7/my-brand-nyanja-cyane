@@ -7,6 +7,7 @@ const blogSchema = new Schema({
     imageUrl: { type: String, required: true },
     comments: { type: Array, default: [] },
     likes: { type: Number, default: 0 },
-    creationDate: { type: Date, default: Date.now() }
+    creationDate: { type: Date, default: Date.now() },
+    usersLiked: { type: Array, default: [] }
 });
 export default model("Blog", blogSchema);
