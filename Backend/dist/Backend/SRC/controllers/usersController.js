@@ -164,6 +164,15 @@ const userController = {
             console.error(error);
             res.status(500).json({ message: 'Server Error' });
         }
+    },
+    async decodeToken(req, res) {
+        try {
+            return res.json(jwt.decode(req.body.token, { complete: true }));
+        }
+        catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Server Error' });
+        }
     }
 };
 export default userController;
