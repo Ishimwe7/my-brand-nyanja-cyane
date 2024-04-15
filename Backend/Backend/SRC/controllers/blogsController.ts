@@ -92,7 +92,7 @@ const blogController = {
             const blogId = req.params.blogId;
             // const { author, content } = req.body;
             const content = req.body.content;
-            const author = req.user.username;
+            const author = req.body.author;
             const blog = await Blog.findById(blogId);
             if (!blog) {
                 return res.status(404).json({ error: 'Blog not found' });
