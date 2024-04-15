@@ -174,8 +174,12 @@ const userController = {
     },
     async decodeToken(req: Request, res: Response) {
         try {
-            console.log(req.body.token);
-            return res.json(jwt.decode(req.body.token, { complete: true }));
+            const decodedToken = jwt.decode(req.body.token, { complete: true });
+            if (!decodedToken) {
+                return res.status(400).json({ message: 'Invalid token' });
+            }
+            const payload = decodedToken.payload;
+            return res.json(payload);
         } catch (error) {
             console.error(error);
             res.status(500).json({ message: 'Server Error' });
