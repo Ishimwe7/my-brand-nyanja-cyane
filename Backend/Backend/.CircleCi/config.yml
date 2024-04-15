@@ -11,13 +11,13 @@ jobs:
       - run:
           command: npm run test
           name: Run tests
-      - run:
-          command: npm run coverage
-          name: Run Coverage
-      - store_artifacts:
-          path: coverage
-      - store_test_results:
-         path: test-results
+      # - run:
+      #     command: npm run coverage
+      #     name: Run Coverage
+      # - store_artifacts:
+      #     path: coverage
+      # - store_test_results:
+      #    path: test-results
       # - run:
       #     name: Open Shell
       #     command: sh
