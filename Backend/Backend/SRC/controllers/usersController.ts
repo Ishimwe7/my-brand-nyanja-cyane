@@ -174,6 +174,7 @@ const userController = {
     },
     async decodeToken(req: Request, res: Response) {
         try {
+            console.log(req.body.token);
             return res.json(jwt.decode(req.body.token, { complete: true }));
         } catch (error) {
             console.error(error);
