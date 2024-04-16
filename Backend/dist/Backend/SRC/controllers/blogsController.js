@@ -31,10 +31,6 @@ const blogController = {
     async updateBlog(req, res) {
         try {
             const id = req.params.blogId;
-            // const { error, value } = await blogValidation.validateAsync(req.body);
-            // if (error) {
-            //     res.status(400).json(error);
-            // }
             const { title, content, image, comments, likes } = req.body;
             const blog = await Blog.findByIdAndUpdate(id, { title, content, image, comments, likes }, { new: true });
             if (!blog) {
@@ -90,7 +86,7 @@ const blogController = {
             const blogId = req.params.blogId;
             // const { author, content } = req.body;
             const content = req.body.content;
-            const author = req.user.username;
+            const author = req.body.author;
             const blog = await Blog.findById(blogId);
             if (!blog) {
                 return res.status(404).json({ error: 'Blog not found' });
