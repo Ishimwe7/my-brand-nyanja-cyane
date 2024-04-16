@@ -12,4 +12,4 @@ const blogSchema = new Schema({
 });
 export default model("Blog", blogSchema);
 
-//blog model
+//blog 
