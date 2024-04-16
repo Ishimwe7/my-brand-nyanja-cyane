@@ -89,7 +89,7 @@ describe('User Controller', () => {
     });
 
     describe('getUserById', () => {
-        let validUserId: string = 'valid_user_id'; // Replace with an existing user ID
+        let validUserId: string = 'valid_user_id'; 
         let invalidUserId: string = 'invalid_user_id'; // Replace with a non-existing or invalid user ID
 
         it('should get a user by ID', (done) => {
