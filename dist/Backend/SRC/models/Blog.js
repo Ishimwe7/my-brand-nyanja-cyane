@@ -9,3 +9,4 @@ const blogSchema = new Schema({
     usersLiked: { type: Array, default: [] }
 });
 export default model("Blog", blogSchema);
+//model
