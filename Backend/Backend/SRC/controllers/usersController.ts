@@ -19,27 +19,17 @@ const isStrongPassword = (password: string): boolean => {
 
 const age = Math.floor(Date.now() / 1000) + (60 * 60);
 
-interface User {
-    _id: Object;
-    names: string;
-    email: string;
-    isAdmnin: boolean;
-}
+// interface User {
+//     names: string;
+//     email: string;
+//     password: string;
+//     isAdmin: boolean;
+// }
 
-const generateToken = (user: User) => {
-    const token = jwt.sign({ user }, 'nyanja cyane secret', { expiresIn: age });
+const generateToken = (userId: any) => {
+    const token = jwt.sign({ userId }, 'nyanja cyane secret', { expiresIn: '1h' });
     return token;
 };
-
-function setCookie(name: String, value: any) {
-    var expires = "";
-    if (name && value) {
-        var date = new Date();
-        date.setTime(date.getTime() + (24 * 60 * 60 * 1000));
-        expires = "; expires=" + date.toUTCString();
-    }
-    document.cookie = name + "=" + (value || "") + expires + "; path=/";
-}
 
 const userController = {
     async createNewUser(req: Request, res: Response) {
@@ -59,8 +49,8 @@ const userController = {
             const user = new User({
                 names,
                 email,
-                password: password,
-                isAdmin
+                password,
+                isAdmin: false
             });
             await user.save();
             res.status(201).json(user);
@@ -73,14 +63,14 @@ const userController = {
     async updateUser(req: Request, res: Response) {
         try {
             // const { id } = req.params;
-            const { id, names, email, password } = req.body;
+            const { id, names, email, password, isAdmin } = req.body;
             if (!isValidEmail(email)) {
                 return res.status(500).json({ Invalid: 'Sorry!! You provided an invalid email.' })
             }
             if (!isStrongPassword(password)) {
                 return res.status(500).json({ Invalid: 'Sorry!! Your password is weak.' })
             }
-            const user = await User.findByIdAndUpdate(id, { names, email, password }, { new: true });
+            const user = await User.findByIdAndUpdate(id, { names, email, password, isAdmin }, { new: true });
             if (!user) {
                 return res.status(404).json({ message: 'User not found' });
             }
@@ -138,42 +128,58 @@ const userController = {
     },
 
 
-    // async login(req: Request, res: Response) {
-    //     try {
-    //         const { email, password } = req.body;
-    //         const user = await User.findOne({ email });
-    //         if (!user) {
-    //             return res.status(404).json({ message: 'Login Failed. Invalid Credentials! !' });
-    //         }
-    //         else {
-    //             const auth = await bcrypt.compare(password, user.password);
-    //             if (auth) {
-    //                 // if(!user.isAdmin){
-    //                 //     res.status(400).json("Unkown error");
-    //                 // }
-    //                 const token = generateToken(user);
-    //                 //res.set('authorization', `${token}`); // Set the authorization header
-    //                 console.log(`User login succes with id :" ${user._id} `);
-    //                 const decodedToken: JwtPayload = jwt.decode(token, { complete: true });
-    //                 const loggedUser = decodedToken.payload;
-    //                 res.cookie('token', token, { httpOnly: true });
-    //                 return res.status(200).json({ "User login succes with token ": token });
-    //             }
-    //             else {
-    //                 return res.status(400).json({ Error: 'Login Failed. Invalid Credentials!' });
-    //             }
-    //         }
-    //         //res.json({ "Login": "Login Success" });
-    //     } catch (error) {
-    //         console.error(error);
-    //         res.status(500).json({ message: 'Server Error' });
-    //     }
-    // },
+    async login(req: Request, res: Response) {
+        try {
+            const { email, password } = req.body;
+            const user = await User.findOne({ email });
+            if (!user) {
+                return res.status(404).json({ message: 'Login Failed. Invalid Credentials! !' });
+            }
+            else {
+                // const auth = await bcrypt.compare(password, user.password);
+                if (password === user.password) {
+                    // if(!user.isAdmin){
+                    //     res.status(400).json("Unkown error");
+                    // }
+                    // const token = generateToken(user);
+                    const token = jwt.sign({ id: user._id, username: user.names, isAdmin: user.isAdmin }, 'nyanja cyane secret', { expiresIn: '1h' });
+                    //res.set('authorization', `${token}`); // Set the authorization header
+                    console.log(`User login succes with id :" ${user._id} `);
+                    //const decodedToken: JwtPayload = jwt.decode(token, { complete: true });
+                    //const loggedUser = decodedToken.payload;
+                    //res.cookie('token', token, { httpOnly: true });
+                    // res.json({ token });
+                    res.cookie('token', token, { httpOnly: true, expires: new Date(Date.now() + 3600000) }); // expires in 1 hour
+                    res.setHeader('Authorization', `Bearer ${token}`);
+                    return res.status(200).json({ "token": token });
+                }
+                else {
+                    return res.status(400).json({ Error: 'Login Failed. Invalid Credentials!' });
+                }
+            }
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Server Error' });
+        }
+    },
     async logout(req: Request, res: Response) {
         try {
             res.clearCookie('token');
             //const cookies = req.cookies;
             res.status(200).json({ message: 'Logout successful' });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Server Error' });
+        }
+    },
+    async decodeToken(req: Request, res: Response) {
+        try {
+            const decodedToken = jwt.decode(req.body.token, { complete: true });
+            if (!decodedToken) {
+                return res.status(400).json({ message: 'Invalid token' });
+            }
+            const payload = decodedToken.payload;
+            return res.json(payload);
         } catch (error) {
             console.error(error);
             res.status(500).json({ message: 'Server Error' });

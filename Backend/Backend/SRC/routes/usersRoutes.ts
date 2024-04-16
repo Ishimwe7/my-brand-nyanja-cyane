@@ -2,7 +2,7 @@ import express from 'express';
 const router = express.Router();
 import userController from '../controllers/usersController.js';
 import authMiddleware from '../middlewares/authMiddleware.js';
-
+import adminMiddleware from '../middlewares/adminMiddleware.js';
 
 /**
  * @swagger
@@ -55,7 +55,7 @@ router.post('/newUser', userController.createNewUser);
  *       '500':
  *         description: Internal server error
  */
-router.get('/allUsers/', userController.getAllUsers);
+router.get('/allUsers/', adminMiddleware, userController.getAllUsers);
 
 /**
  * @swagger
@@ -82,11 +82,11 @@ router.get('/allUsers/', userController.getAllUsers);
  *       '500':
  *         description: Internal server error
  */
-router.get('/getUser/:userId', userController.getUserById);
+router.get('/getUser/:userId', authMiddleware, userController.getUserById);
 
 /**
  * @swagger
- * /users/editUser/:
+ * /users/editUser:
  *   put:
  *     summary: Update a user
  *     tags: [Users]
@@ -110,11 +110,11 @@ router.get('/getUser/:userId', userController.getUserById);
  *       '500':
  *         description: Internal server error
  */
-router.put('/editUser/', userController.updateUser);
+router.put('/editUser', authMiddleware, userController.updateUser);
 
 /**
  * @swagger
- * /users/login/:
+ * /users/login:
  *   post:
  *     summary: Log in with credentials
  *     tags: [Users]
@@ -151,7 +151,7 @@ router.put('/editUser/', userController.updateUser);
  *       '500':
  *         description: Internal server error
  */
-//router.post('/login/', userController.login);
+router.post('/login', userController.login);
 
 /**
  * @swagger
@@ -192,6 +192,7 @@ router.post('/logout', userController.logout);
  *       '500':
  *         description: Internal server error
  */
-router.delete('/deleteUser/', userController.deleteUser);
+router.delete('/deleteUser', adminMiddleware, userController.deleteUser);
+router.post('/decodeToken', userController.decodeToken);
 
 export default router;
