@@ -110,7 +110,6 @@ describe('Blog Controller', () => {
             .end((err: any, res: any) => {
                 previousLikes = res.body.likes;
                 expect(res.body).to.be.an('object');
-                // expect(res.body.likes).to.equal(previousLikes + 1);
                 done();
             });
     });
