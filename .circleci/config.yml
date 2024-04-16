@@ -18,12 +18,13 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Insall dependencies
+          name: Install dependencies
           command: cd Backend && npm install
       - run:
           name: Test API
           command: cd Backend && npm run test
- deploy:
+
+  deploy:
     docker:
       - image: cimg/node:21.7.1
     steps:
@@ -45,4 +46,4 @@ workflows:
           filters:
             branches:
               only:
-                - main
+                - main
