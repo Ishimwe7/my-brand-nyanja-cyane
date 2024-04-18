@@ -87,7 +87,7 @@ const blogController = {
         try {
             const blogId = req.params.blogId;
             // const { author, content } = req.body;
-            const content = req.body.commentContent;
+            const content = req.body.content;
             const author = req.body.author;
             const blog = await Blog.findById(blogId);
             if (!blog) {
