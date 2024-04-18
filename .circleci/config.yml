@@ -1,50 +1,21 @@
 version: 2.1
+
 jobs:
-  build:
+  hello-job:
     docker:
-       - image: node:lts-alpine3.19
-      # - image: cimg/node:21.7.1
+      - image: node:lts-alpine3.19 # the primary container, where your job's commands are run
     steps:
-      - checkout
-      - run:
-          name: Install dependencies
-          command: cd Backend && npm install
+      - checkout # check out the code in the project directory
+      - run: echo "hello world" # run the `echo` command
+      - run: npm install # install dependencies
       - run:
           name: Build
           command: cd Backend && npm run build
-
-  test:
-    docker:
-      - image: cimg/node:21.7.1
-    steps:
-      - checkout
       - run:
-          name: Install dependencies
-          command: cd Backend && npm install
-      - run:
-          name: Test API
           command: cd Backend && npm run test
-
-  deploy:
-    docker:
-      - image: cimg/node:21.7.1
-    steps:
-      - checkout
-      - run:
-          name: Deploy to Render
-          command: |
-            curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer ${RENDER_API_KEY}" -d '{"branch":"main"}' https://api.render.com/deploy/srv-coa8k9779t8c73eeag70?key=${RENDER_DEPLOY_HOOK}
+          name: Run tests
 
 workflows:
-  version: 2
-  build-test-and-deploy:
+  build_and_test:
     jobs:
-      - test
-      - build
-      - deploy:
-          requires:
-            - build
-          filters:
-            branches:
-              only:
-                - main
+      - hello-job
