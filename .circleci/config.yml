@@ -13,7 +13,7 @@ jobs:
           command: cd Backend && npm run build
       - run:
           command: cd Backend && npm run test
-          name: Run tests
+          name: Running tests
 
 workflows:
   build_and_test:
