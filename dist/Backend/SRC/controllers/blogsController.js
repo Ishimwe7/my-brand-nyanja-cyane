@@ -206,8 +206,9 @@ const blogController = {
             }
             comment.usersLiked.push(userId);
             comment.likes++;
-            await blog.save();
-            res.json(blog);
+            const updatedBlog = await blog.save();
+            //await blog.save();
+            res.json(updatedBlog);
         }
         catch (error) {
             console.error('Error liking comment:', error);
@@ -233,8 +234,9 @@ const blogController = {
             const userIndex = comment.usersLiked.indexOf(userId);
             comment.usersLiked.splice(userIndex, 1);
             comment.likes--;
-            await blog.save();
-            res.json(blog);
+            const updatedBlog = await blog.save();
+            // await blog.save();
+            res.json(updatedBlog);
         }
         catch (error) {
             console.error('Error unliking comment:', error);
