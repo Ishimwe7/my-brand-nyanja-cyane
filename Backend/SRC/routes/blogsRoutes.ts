@@ -244,4 +244,106 @@ router.post('/addLike/:blogId/like', authMiddleware, blogController.likeBlog);
  */
 router.delete('/unLike/:blogId/like/', authMiddleware, blogController.unlikeBlog);
 
+/**
+ * @swagger
+ * /blogs/likeComment/{blogId}/{commentId}:
+ *   post:
+ *     summary: Like a comment
+ *     tags: [Blogs]
+ *     parameters:
+ *       - in: path
+ *         name: blogId
+ *         required: true
+ *         description: ID of the blog containing the comment
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: commentId
+ *         required: true
+ *         description: ID of the comment to like
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: Successfully liked the comment
+ *       '404':
+ *         description: Blog or comment not found
+ *       '500':
+ *         description: Internal server error
+ */
+router.post('/likeComment/:blogId/:commentId', authMiddleware, blogController.likeComment);
+
+/**
+ * @swagger
+ * /blogs/unlikeComment/{blogId}/{commentId}:
+ *   delete:
+ *     summary: Unlike a comment
+ *     tags: [Blogs]
+ *     parameters:
+ *       - in: path
+ *         name: blogId
+ *         required: true
+ *         description: ID of the blog containing the comment
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: commentId
+ *         required: true
+ *         description: ID of the comment to unlike
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: Successfully unliked the comment
+ *       '404':
+ *         description: Blog or comment not found
+ *       '500':
+ *         description: Internal server error
+ */
+router.delete('/unlikeComment/:blogId/:commentId', authMiddleware, blogController.unlikeComment);
+
+/**
+ * @swagger
+ * /blogs/replyToComment/{blogId}/{commentId}:
+ *   post:
+ *     summary: Reply to a comment
+ *     tags: [Blogs]
+ *     parameters:
+ *       - in: path
+ *         name: blogId
+ *         required: true
+ *         description: ID of the blog containing the comment
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: commentId
+ *         required: true
+ *         description: ID of the comment to reply to
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               author:
+ *                 type: string
+ *               content:
+ *                 type: string
+ *             required:
+ *               - author
+ *               - content
+ *     responses:
+ *       '201':
+ *         description: Successfully replied to the comment
+ *       '404':
+ *         description: Blog or comment not found
+ *       '500':
+ *         description: Internal server error
+ */
+router.post('/replyToComment/:blogId/:commentId', authMiddleware, blogController.replyToComment);
+
+
 export default router;

@@ -98,6 +98,7 @@ const blogController = {
                 content: content,
                 likes: 0,
                 replies: [],
+                usersLiked: [],
                 addedDate: Date.now()
             };
             blog.comments.push(newComment);
@@ -109,31 +110,39 @@ const blogController = {
             res.status(500).json({ error: 'Internal Server Error' });
         }
     },
-    // async replyToComment(req: Request, res: Response) {
-    //     try {
-    //         //const blogId = req.params.blogId;
-    //         const { blogId, commentId, author, content } = req.body;
-    //         const blog = await Blog.findById(blogId);
-    //         if (!blog) {
-    //             return res.status(404).json({ error: 'Blog not found' });
-    //         }
-    //         else {
-    //             const comment = await blog.comments.find(comment: Comment => comment.id === commentId);
-    //             const newReplyId = blog.replies.length + 1;
-    //             const newComment = {
-    //                 id: newReplyId,
-    //                 author: author,
-    //                 content: content,
-    //             };
-    //             blog.comments.push(newComment);
-    //             const updatedBlog = await blog.save();
-    //             res.json(updatedBlog);
-    //         }
-    //     } catch (error) {
-    //         console.error('Error adding comment to Blogt:', error);
-    //         res.status(500).json({ error: 'Internal Server Error' });
-    //     }
-    // },
+    async replyToComment(req, res) {
+        try {
+            const { blogId, commentId, author, content } = req.body;
+            // Find the blog
+            const blog = await Blog.findById(blogId);
+            if (!blog) {
+                return res.status(404).json({ error: 'Blog not found' });
+            }
+            // Find the comment to reply to
+            const comment = blog.comments.find(comment => comment.id == commentId);
+            if (!comment) {
+                return res.status(404).json({ error: 'Comment not found' });
+            }
+            // Create the new reply
+            const newReplyId = blog.comments.length + 1;
+            const newReply = {
+                id: newReplyId,
+                author: author,
+                content: content,
+                likes: 0,
+                addedDate: Date.now()
+            };
+            // Add the reply to the comment
+            comment.replies.push(newReply);
+            // Save the updated blog
+            await blog.save();
+            res.json(blog);
+        }
+        catch (error) {
+            console.error('Error replying to comment:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
     async likeBlog(req, res) {
         try {
             //console.log("Hello Sir" + req.user.id);
@@ -178,6 +187,59 @@ const blogController = {
         }
         catch (error) {
             console.error('Error unliking blog:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+    async likeComment(req, res) {
+        try {
+            const { blogId, commentId } = req.params;
+            const userId = req.user.id;
+            const blog = await Blog.findById(blogId);
+            if (!blog) {
+                return res.status(404).json({ error: 'Blog not found' });
+            }
+            const comment = blog.comments.find(comment => comment.id == commentId);
+            console.log(blog.comments[0].id + " " + commentId);
+            if (!comment) {
+                return res.status(404).json({ error: 'Comment not found' });
+            }
+            if (comment.usersLiked.includes(userId)) {
+                return res.status(400).json({ error: 'User has already liked this comment' });
+            }
+            comment.usersLiked.push(userId);
+            comment.likes++;
+            await blog.save();
+            res.json(blog);
+        }
+        catch (error) {
+            console.error('Error liking comment:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+    async unlikeComment(req, res) {
+        try {
+            const { blogId, commentId } = req.params;
+            const userId = req.user.id;
+            const blog = await Blog.findById(blogId);
+            if (!blog) {
+                return res.status(404).json({ error: 'Blog not found' });
+            }
+            const comment = blog.comments.find(comment => comment.id == commentId);
+            if (!comment) {
+                console.log(blogId + " " + commentId);
+                return res.status(404).json({ error: 'Comment not found ' });
+            }
+            if (!comment.usersLiked.includes(userId)) {
+                return res.status(400).json({ error: 'User has not liked this comment' });
+            }
+            const userIndex = comment.usersLiked.indexOf(userId);
+            comment.usersLiked.splice(userIndex, 1);
+            comment.likes--;
+            await blog.save();
+            res.json(blog);
+        }
+        catch (error) {
+            console.error('Error unliking comment:', error);
             res.status(500).json({ error: 'Internal Server Error' });
         }
     }
