@@ -135,6 +135,10 @@ const blogController = {
             const updatedComments = blog.comments.map((commentItem) => {
                 if (commentItem.id == commentId) {
                     commentItem.replies.push(newReply);
+                    return {
+                        ...commentItem,
+                        replies: [commentItem.replies, newReply]
+                    };
                 }
                 return commentItem;
             });
