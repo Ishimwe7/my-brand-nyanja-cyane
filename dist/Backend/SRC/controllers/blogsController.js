@@ -204,11 +204,26 @@ const blogController = {
             if (comment.usersLiked.includes(userId)) {
                 return res.status(400).json({ error: 'User has already liked this comment' });
             }
-            comment.usersLiked.push(userId);
-            comment.likes++;
-            const updatedBlog = await blog.save();
-            //await blog.save();
-            res.json(updatedBlog);
+            const updatedComments = blog.comments.map((commentItem) => {
+                if (commentItem.id == commentId) {
+                    // Increment likes and add user to liked users
+                    console.log("Comment found");
+                    return {
+                        ...commentItem,
+                        likes: commentItem.likes + 1,
+                        usersLiked: [...commentItem.usersLiked, userId]
+                    };
+                }
+                return commentItem;
+            });
+            console.log(updatedComments);
+            blog.comments = updatedComments;
+            // comment.usersLiked.push(userId);
+            // comment.likes++;
+            // console.log(comment);
+            //const updatedBlog = await blog.save();
+            await blog.save();
+            res.json(blog);
         }
         catch (error) {
             console.error('Error liking comment:', error);
