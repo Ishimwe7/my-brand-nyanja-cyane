@@ -118,12 +118,10 @@ const blogController = {
             if (!blog) {
                 return res.status(404).json({ error: 'Blog not found' });
             }
-            // Find the comment to reply to
             const comment = blog.comments.find(comment => comment.id == commentId);
             if (!comment) {
                 return res.status(404).json({ error: 'Comment not found' });
             }
-            // Create the new reply
             const newReplyId = blog.comments.length + 1;
             const newReply = {
                 id: newReplyId,
