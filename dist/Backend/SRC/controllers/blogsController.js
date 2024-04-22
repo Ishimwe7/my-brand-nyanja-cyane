@@ -132,7 +132,14 @@ const blogController = {
                 content: content,
                 addedDate: Date.now()
             };
-            comment.replies.push(newReply);
+            const updatedComments = blog.comments.map((commentItem) => {
+                if (commentItem.id == commentId) {
+                    commentItem.replies.push(newReply);
+                }
+                return commentItem;
+            });
+            blog.comments = updatedComments;
+            // comment.replies.push(newReply);
             await blog.save();
             res.json(blog);
         }
