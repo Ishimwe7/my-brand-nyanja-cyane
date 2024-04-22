@@ -112,8 +112,11 @@ const blogController = {
     },
     async replyToComment(req, res) {
         try {
-            const { blogId, commentId, author, content } = req.body;
-            // Find the blog
+            //const { blogId, commentId, author, content } = req.body;
+            const blogId = req.params.blogId;
+            const commentId = req.params.commentId;
+            const content = req.body.content;
+            const author = req.body.author;
             const blog = await Blog.findById(blogId);
             if (!blog) {
                 return res.status(404).json({ error: 'Blog not found' });
@@ -122,17 +125,14 @@ const blogController = {
             if (!comment) {
                 return res.status(404).json({ error: 'Comment not found' });
             }
-            const newReplyId = blog.comments.length + 1;
+            const newReplyId = comment.replies.length + 1;
             const newReply = {
                 id: newReplyId,
                 author: author,
                 content: content,
-                likes: 0,
                 addedDate: Date.now()
             };
-            // Add the reply to the comment
             comment.replies.push(newReply);
-            // Save the updated blog
             await blog.save();
             res.json(blog);
         }
