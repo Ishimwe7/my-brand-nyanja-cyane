@@ -230,7 +230,7 @@ const blogController = {
                 }
                 return commentItem;
             });
-            console.log(updatedComments);
+            // console.log(updatedComments);
             blog.comments = updatedComments;
             // comment.usersLiked.push(userId);
             // comment.likes++;
@@ -263,13 +263,22 @@ const blogController = {
             if (!comment.usersLiked.includes(userId)) {
                 return res.status(400).json({ error: 'User has not liked this comment' });
             }
-
-            const userIndex = comment.usersLiked.indexOf(userId);
-            comment.usersLiked.splice(userIndex, 1);
-            comment.likes--;
-            const updatedBlog = await blog.save();
-            // await blog.save();
-            res.json(updatedBlog);
+            const updatedComments = blog.comments.map((commentItem) => {
+                if (commentItem.id == commentId) {
+                    // Increment likes and add user to liked users
+                    const userIndex = commentItem.usersLiked.indexOf(userId);
+                    commentItem.usersLiked.splice(userIndex, 1);
+                    return {
+                        ...commentItem,
+                        likes: commentItem.likes - 1,
+                        usersLiked: commentItem.usersLiked
+                    };
+                }
+                return commentItem;
+            });
+            blog.comments = updatedComments;
+            await blog.save();
+            res.json(blog);
         } catch (error) {
             console.error('Error unliking comment:', error);
             res.status(500).json({ error: 'Internal Server Error' });
