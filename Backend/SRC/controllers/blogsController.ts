@@ -35,11 +35,18 @@ const blogController = {
         try {
             const id = req.params.blogId;
             const { title, content, imageUrl } = req.body;
-            const blog = await Blog.findByIdAndUpdate(id, { title, content, imageUrl }, { new: true });
+            const blog = await Blog.findById(id);
+            if (blog) {
+                blog.title = title;
+                blog.content = content;
+                blog.imageUrl = imageUrl;
+                const updatedBlog = await blog.save();
+                res.json(updatedBlog);
+            }
+            // const blog = await Blog.findByIdAndUpdate(id, { title, content, imageUrl }, { new: true });
             if (!blog) {
                 return res.status(404).json({ message: 'Blog not found' });
             }
-            res.json(blog);
         } catch (error) {
             console.error(error);
             res.status(500).json({ message: 'Server Error' });
