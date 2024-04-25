@@ -31,8 +31,8 @@ const blogController = {
     async updateBlog(req, res) {
         try {
             const id = req.params.blogId;
-            const { title, content, image, comments, likes } = req.body;
-            const blog = await Blog.findByIdAndUpdate(id, { title, content, image, comments, likes }, { new: true });
+            const { title, content, image } = req.body;
+            const blog = await Blog.findByIdAndUpdate(id, { title, content, image }, { new: true });
             if (!blog) {
                 return res.status(404).json({ message: 'Blog not found' });
             }
